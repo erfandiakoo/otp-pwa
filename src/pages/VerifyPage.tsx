@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import escapeHtml from 'escape-html';
 import { useNavigate } from 'react-router-dom';
@@ -31,6 +31,25 @@ const VerifyPage: React.FC = () => {
             }
         }
     };
+
+    useEffect(() => {
+        const receiveSms = async () => {
+            if ('sms' in navigator) {
+                try {
+                    const sms = await (navigator as any).sms.receive();
+                    const otpInput = document.getElementById('otpInput') as HTMLInputElement;
+                    const otp = sms.content.match(/\b\d{6}\b/)[0];
+                    otpInput.value = otp;
+                } catch (error) {
+                    console.log('failed to read sms:', error);
+                }
+            } else {
+                console.log('no sms receiver...');
+            }
+        };
+
+        receiveSms();
+    }, []);
     return (
         <section className='flex flex-col justify-end items-center w-full h-screen bg-slate-800'>
 
@@ -43,7 +62,7 @@ const VerifyPage: React.FC = () => {
                     <p className='text-xs mt-2'>کد تایید چهار رقمی ارسال شده به شماره تلفن خود را وارد کنید </p>
                 </div>
                 <div className='flex flex-row-reverse gap-4 mx-8 items-center justify-center'>
-                    {Array.from({ length: 4 }).map((_, index) => (
+                    {Array.from({ length: 4 }).reverse().map((_, index) => (
                         <input
                             key={index}
                             type="text"
@@ -57,8 +76,9 @@ const VerifyPage: React.FC = () => {
                             })}
                             onChange={(e) => handleInputChange(e, index)}
                             ref={otpRefs[index]}
-                            autoFocus
+                            autoComplete="one-time-code"
                             className='border border-gray-300 text-center rounded-md w-full p-2'
+                            id="otpInput"
                         />
                     ))}
                 </div>
