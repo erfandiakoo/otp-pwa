@@ -76,6 +76,7 @@ const VerifyPage: React.FC = () => {
                             })}
                             onChange={(e) => handleInputChange(e, index)}
                             ref={otpRefs[index]}
+                            inputMode='numeric'
                             autoComplete="one-time-code"
                             className='border border-gray-300 text-center rounded-md w-full p-2'
                             id="otpInput"
