@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import escapeHtml from 'escape-html';
 import { useNavigate } from 'react-router-dom';
@@ -10,7 +10,7 @@ type FormValues = {
     otp4: string;
 };
 const VerifyPage: React.FC = () => {
-    const { register, handleSubmit, formState: { errors }, setValue } = useForm<FormValues>();
+    const { register, handleSubmit, setValue } = useForm<FormValues>();
     const otpRefs = [useRef<HTMLInputElement>(null), useRef<HTMLInputElement>(null), useRef<HTMLInputElement>(null), useRef<HTMLInputElement>(null)];
     const navigate = useNavigate();
 
@@ -18,7 +18,7 @@ const VerifyPage: React.FC = () => {
         const otp = `${escapeHtml(data.otp1)}${escapeHtml(data.otp2)}${escapeHtml(data.otp3)}${escapeHtml(data.otp4)}`;
         console.log('Submitted OTP:', otp);
         // TODO: Verify OTP
-        navigate('/', { state: { otp } });
+        navigate('/home', { state: { otp } });
 
     };
 
